@@ -5,6 +5,8 @@ import {
   createShoppingListValidation,
   addMemberToShoppingListValidation,
   getShoppingListValidation,
+  deleteMemberFromShoppingListValidation,
+  updateItemToShoppingListValidation
 } from "./validation/shoppingLists";
 import { expressjwt } from "express-jwt";
 import dotnenv from "dotenv";
@@ -17,6 +19,9 @@ import {
   addMemberToShoppingList,
   deleteMemberFromShoppingList,
   addItemToShoppingList,
+  updateItemInShoppingList,
+  deleteItemFromShoppingList,
+  updateShoppingList
 } from "../controllers/shoppingList";
 import { login, register } from "../controllers/auth";
 
@@ -42,6 +47,18 @@ apiRouter.use(Paths.Auth.Base, authRouter);
 
 const shoppingListRouter = Router();
 
+shoppingListRouter.post(
+  Paths.ShoppingList.Get,
+  createShoppingListValidation,
+  createShoppingList
+);
+
+shoppingListRouter.patch(
+  Paths.ShoppingList.Get,
+  createShoppingListValidation,
+  updateShoppingList
+);
+
 shoppingListRouter.get(
   Paths.ShoppingList.Get,
   getShoppingListValidation,
@@ -64,7 +81,7 @@ shoppingListRouter.post(
 
 shoppingListRouter.delete(
   Paths.ShoppingList.Members.Delete,
-  addMemberToShoppingListValidation,
+  deleteMemberFromShoppingListValidation,
   deleteMemberFromShoppingList
 );
 
@@ -76,14 +93,14 @@ shoppingListRouter.post(
 
 shoppingListRouter.patch(
   Paths.ShoppingList.Items.Patch,
-  itemToShoppingListValidation,
-  addItemToShoppingList
+  updateItemToShoppingListValidation,
+  updateItemInShoppingList
 );
 
 shoppingListRouter.delete(
   Paths.ShoppingList.Items.Delete,
-  itemToShoppingListValidation,
-  addItemToShoppingList
+  updateItemToShoppingListValidation,
+  deleteItemFromShoppingList,
 );
 
 apiRouter.use(

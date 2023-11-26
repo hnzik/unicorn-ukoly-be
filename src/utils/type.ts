@@ -10,8 +10,8 @@ export interface IRes extends e.Response {}
 
 // **** Database **** //
 
-export interface User {
+export interface UserType {
   id: string;
-  name: string;
+  email: string;
   password: string;
 }

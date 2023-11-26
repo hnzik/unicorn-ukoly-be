@@ -1,7 +1,7 @@
-import { User } from "./type";
+import { IReq, UserType } from "./type";
 import jwt from "jsonwebtoken";
 
-const createJWT = (user: User) => {
+const createJWT = (user: UserType) => {
   const secret = process.env.JWT_SECRET;
 
   if (!secret) {
@@ -11,7 +11,7 @@ const createJWT = (user: User) => {
   return jwt.sign(
     {
       id: user.id,
-      username: user.name,
+      email: user.email,
     },
     secret,
     { expiresIn: "1d" }
@@ -21,6 +21,9 @@ const createJWT = (user: User) => {
 const verifyJWT = (token: string) => {
   const secret = process.env.JWT_SECRET;
 
+  console.log("secret", secret);
+  console.log("token", token);
+
   if (!secret) {
     throw new Error("JWT_SECRET not set");
   }
@@ -28,4 +31,14 @@ const verifyJWT = (token: string) => {
   return jwt.verify(token, secret);
 };
 
-export { createJWT, verifyJWT };
+const getJwtFromHeader = (req: IReq<any>) => {
+  let jwt = req.headers.authorization;
+
+  if (!jwt) return null;
+
+  jwt = req.headers.authorization?.split(" ")[1];
+
+  return jwt;
+}
+
+export { getJwtFromHeader, createJWT, verifyJWT };
