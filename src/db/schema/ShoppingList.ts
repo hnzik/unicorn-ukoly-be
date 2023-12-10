@@ -8,6 +8,8 @@ interface IShoppingList extends Document {
   owner: mongoose.Types.ObjectId;
   users: mongoose.Types.ObjectId[];
   items: IItem[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const shoppingListSchema = new Schema<IShoppingList>({

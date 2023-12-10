@@ -21,9 +21,6 @@ const createJWT = (user: UserType) => {
 const verifyJWT = (token: string) => {
   const secret = process.env.JWT_SECRET;
 
-  console.log("secret", secret);
-  console.log("token", token);
-
   if (!secret) {
     throw new Error("JWT_SECRET not set");
   }

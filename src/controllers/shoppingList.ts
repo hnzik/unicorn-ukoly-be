@@ -14,7 +14,22 @@ const getShoppingLists = async (req: IReq, res: IRes) => {
 
   try {
     const shoppingLists = await ShoppingListSchema.find({$or:[{owner:payload.id},{users: payload.id}]});
-    res.status(200).send(shoppingLists);
+
+    if(shoppingLists.length === 0) {
+      return res.status(404).send({ message: 'Shopping lists not found' });
+    }
+
+    res.status(200).send(shoppingLists.map(shoppingList => (
+      {
+        _id: shoppingList._id,
+        name: shoppingList.name,
+        owner: shoppingList.owner,
+        users: shoppingList.users,
+        items: shoppingList.items,
+        createdAt: shoppingList.createdAt,
+        updatedAt: shoppingList.updatedAt
+      }
+    )));
   } catch (error) {
     res.status(500).send({ message: error });
   }
@@ -26,11 +41,20 @@ const getShoppingList = async (req: IReq<string>, res: IRes) => {
   try {
     const payload = verifyJWT(getJwtFromHeader(req)!)  as {id: string, email: string};
 
-    const shoppingList = await ShoppingListSchema.find( { $and: [ { _id: req.params.id }, { $or: [ { owner: payload.id }, { users: payload.id } ] } ] });
+    const shoppingList = await ShoppingListSchema.findOne( { $and: [ { _id: req.params.id }, { $or: [ { owner: payload.id }, { users: payload.id } ] } ] });
     if (!shoppingList) {
       return res.status(404).send({ message: 'Shopping list not found' });
     }
-    res.status(200).send(shoppingList);
+
+    res.status(200).send({
+      _id: shoppingList._id,
+      name: shoppingList.name,
+      owner: shoppingList.owner,
+      users: shoppingList.users,
+      items: shoppingList.items,
+      createdAt: shoppingList.createdAt,
+      updatedAt: shoppingList.updatedAt
+    });
   } catch (error) {
     res.status(500).send({ message: error });
   }
